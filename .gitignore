@@ -1,0 +1,31 @@
+# Node.js dependencies
+node_modules
+
+# Environment variables
+.env
+
+# Hardhat files
+/cache
+/artifacts
+
+# TypeChain files
+/typechain
+/typechain-types
+
+# solidity-coverage files
+/coverage
+/coverage.json
+
+# Build artifacts
+/build/
+/bin/
+contracts/artifacts/
+
+# Configuration files
+/config
+
+# Ignition (assuming it's a directory)
+/ignition/
+
+# Temporary dependencies or generated files
+.deps/
