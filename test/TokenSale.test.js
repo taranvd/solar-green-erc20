@@ -1,6 +1,5 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const config = require("../config/config");
 
 describe("TokenSale", function () {
   let owner;
