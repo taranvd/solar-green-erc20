@@ -32,7 +32,7 @@ describe("SolarGreenToken", function () {
   });
 
   describe("Blacklister Functionality", function () {
-    // Перевірка можливості видання ролі BLACKLISTER адміністратором.
+    // Checking the ability to issue the BLACKLISTER role by the administrator.
     it("should allow issuance of BLACKLISTER role by the administrator", async function () {
       const roleName = "BLACKLISTER";
       const BLACKLISTER_ROLE = ethers.utils.keccak256(
@@ -43,89 +43,89 @@ describe("SolarGreenToken", function () {
         .connect(owner)
         .grantRole(BLACKLISTER_ROLE, blacklister.address);
 
-      // Перевірка, чи має користувач роль BLACKLISTER
+      // Checking if the user has the BLACKLISTER role
       expect(await token.hasRole(BLACKLISTER_ROLE, blacklister.address)).to.be
         .true;
     });
 
     it("should block a user by BLACKLISTER", async function () {
-      // Визначення назви ролі BLACKLISTER
+      // Defining the BLACKLISTER role name
       const roleName = "BLACKLISTER";
 
-      // Обчислення хешу назви ролі BLACKLISTER
+      // Computing the hash of the BLACKLISTER role name
       const BLACKLISTER_ROLE = ethers.utils.keccak256(
         ethers.utils.toUtf8Bytes(roleName)
       );
 
-      // Видання ролі BLACKLISTER адміністратором (власником контракту)
+      // Issuing the BLACKLISTER role by the administrator (contract owner)
       await token
         .connect(owner)
         .grantRole(BLACKLISTER_ROLE, blacklister.address);
 
-      // Перевірка, чи має користувач роль BLACKLISTER
+      // Checking if the user has the BLACKLISTER role
       expect(await token.hasRole(BLACKLISTER_ROLE, blacklister.address)).to.be
         .true;
 
-      // Адреса користувача, якого потрібно заблокувати
+      // Address of the user to be blocked
       const userToBlock = user.address;
 
-      // Перевірка, чи користувач не заблокований перед блокуванням
+      // Checking if the user is not blocked before blocking
       expect(await token.isUserBlocked(userToBlock)).to.be.false;
 
-      // Блокування користувача BLACKLISTER'ом
+      // Blocking the user by the BLACKLISTER
       await token.connect(blacklister).blockUser(userToBlock);
 
-      // Перевірка, чи користувач був успішно заблокований
+      // Checking if the user was successfully blocked
       expect(await token.isUserBlocked(userToBlock)).to.be.true;
     });
 
     it("should unblock a user by BLACKLISTER", async function () {
-      // Визначення назви ролі BLACKLISTER
+      // Defining the BLACKLISTER role name
       const roleName = "BLACKLISTER";
 
-      // Обчислення хешу назви ролі BLACKLISTER
+      // Computing the hash of the BLACKLISTER role name
       const BLACKLISTER_ROLE = ethers.utils.keccak256(
         ethers.utils.toUtf8Bytes(roleName)
       );
 
-      // Видання ролі BLACKLISTER адміністратором (власником контракту)
+      // Issuing the BLACKLISTER role by the administrator (contract owner)
       await token
         .connect(owner)
         .grantRole(BLACKLISTER_ROLE, blacklister.address);
 
-      // Перевірка, чи має користувач роль BLACKLISTER
+      // Checking if the user has the BLACKLISTER role
       expect(await token.hasRole(BLACKLISTER_ROLE, blacklister.address)).to.be
         .true;
 
-      // Адреса користувача, якого потрібно розблокувати
+      // Address of the user to be unblocked
       const userToUnblock = user.address;
 
-      // Блокування користувача BLACKLISTER'ом перед розблокуванням
+      // Blocking the user by the BLACKLISTER before unblocking
       await token.connect(blacklister).blockUser(userToUnblock);
       expect(await token.isUserBlocked(userToUnblock)).to.be.true;
 
-      // Розблокування користувача BLACKLISTER'ом
+      // Unblocking the user by the BLACKLISTER
       await token.connect(blacklister).unblockUser(userToUnblock);
 
-      // Перевірка, чи користувач був успішно розблокований
+      // Checking if the user was successfully unblocked
       expect(await token.isUserBlocked(userToUnblock)).to.be.false;
     });
   });
 
   describe("Token Transfer", function () {
-    // Перевірка можливості передачі токенів між користувачами.
+    // Checking the ability to transfer tokens between users.
     it("should allow token transfer between users", async function () {
-      // Отримати початковий баланс користувачів
+      // Getting initial balances of users
       const initialBalanceSender = await token.balanceOf(owner.address);
       const initialBalanceRecipient = await token.balanceOf(user.address);
 
-      // Кількість токенів для передачі
+      // Amount of tokens to transfer
       const amount = ethers.utils.parseEther("10");
 
-      // Передача токенів від власника до користувача
+      // Transferring tokens from owner to user
       await token.connect(owner).transfer(user.address, amount);
 
-      // Перевірити, що токени були успішно передані
+      // Checking that tokens were successfully transferred
       const finalBalanceSender = await token.balanceOf(owner.address);
       const finalBalanceRecipient = await token.balanceOf(user.address);
 
@@ -135,19 +135,19 @@ describe("SolarGreenToken", function () {
       );
     });
 
-    // Перевірка передачі токенів від блокованих користувачів.
+    // Checking token transfer from blocked users.
     it("should allow token transfer from blocked users", async function () {
-      // Отримати початковий баланс користувачів
+      // Getting initial balances of users
       const initialBalanceSender = await token.balanceOf(owner.address);
       const initialBalanceRecipient = await token.balanceOf(user.address);
 
-      // Кількість токенів для передачі
+      // Amount of tokens to transfer
       const amount = ethers.utils.parseEther("10");
 
-      // Передача токенів від власника до користувача
+      // Transferring tokens from owner to user
       await token.connect(owner).transfer(user.address, amount);
 
-      // Перевірити, що токени були успішно передані
+      // Checking that tokens were successfully transferred
       const finalBalanceSender = await token.balanceOf(owner.address);
       const finalBalanceRecipient = await token.balanceOf(user.address);
 
@@ -156,13 +156,13 @@ describe("SolarGreenToken", function () {
         initialBalanceRecipient.add(amount)
       );
 
-      // Перед блокуванням видати роль овнеру
+      // Issuing the blacklister role to the owner
       await token.connect(owner).grantBlacklisterRole(owner.address);
 
-      // Блокування користувача, який передав токени
+      // Blocking the user who transferred the tokens
       await token.connect(owner).blockUser(owner.address);
 
-      // Перевірити, що блокований користувач не може передати токени
+      // Checking that the blocked user cannot transfer tokens
       await expect(
         token.connect(owner).transfer(user.address, amount)
       ).to.be.revertedWith("Sender is blocked");
@@ -170,36 +170,36 @@ describe("SolarGreenToken", function () {
   });
 
   describe("Token Minting", function () {
-    // Перевірка можливості видання нових токенів адміністратором.
+    // Checking the ability to mint new tokens by the administrator.
     it("should allow token minting by the administrator", async function () {
-      // Очікувана кількість токенів для видання
+      // Expected amount of tokens to mint
       const amount = 100;
 
-      // Перевірка, що початковий баланс користувача дорівнює нулю
+      // Checking that the user's initial balance is zero
       expect(await token.balanceOf(user.address)).to.equal(0);
 
-      // Видання нових токенів адміністратором
+      // Minting new tokens by the administrator
       await token.connect(owner).mint(user.address, amount);
 
-      // Перевірка, що баланс користувача збільшився на відповідну кількість токенів
+      // Checking that the user's balance increased by the corresponding amount of tokens
       expect(await token.balanceOf(user.address)).to.equal(amount);
     });
   });
 
   describe("Token Burning", function () {
-    // Перевірка можливості спалення токенів адміністратором.
+    // Checking the ability to burn tokens by the administrator.
     it("should allow token burning by the administrator", async function () {
       const amount = 100;
-      // Передача токенів користувачеві для подальшого спалення
+      // Transferring tokens to the user for further burning
       await token.connect(owner).transfer(user.address, amount);
 
-      // перевірка балансу користувача
+      // Checking user's balance
       expect(await token.balanceOf(user.address)).to.eq(amount);
 
-      // Спалення токенів адміністратором
+      // Burning tokens by the administrator
       await token.connect(owner).burn(user.address, amount);
 
-      // Перевірка, що баланс користувача зменшився на відповідну кількість токенів
+      // Checking that the user's balance decreased by the corresponding amount of tokens
       expect(await token.balanceOf(user.address)).to.equal(0);
     });
   });
