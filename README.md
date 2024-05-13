@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://images.crunchbase.com/image/upload/c_pad,f_auto,q_auto:eco,dpr_1/pzfjixlh2ht51aoqsqus" alt="Dexola Logo">
+  <img width="220" src="https://images.crunchbase.com/image/upload/c_pad,f_auto,q_auto:eco,dpr_1/pzfjixlh2ht51aoqsqus" alt="Dexola Logo">
 </p>
 
 <h1 align="center">
