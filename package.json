@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@chainlink/contracts": "^1.0.1",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
     "@openzeppelin/contracts": "^4.9.6",
     "@openzeppelin/contracts-upgradeable": "^4.9.6",
     "coverage": "^0.4.1",

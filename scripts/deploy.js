@@ -1,13 +1,22 @@
-const { ethers } = require("hardhat");
+const { ethers, upgrades } = require("hardhat");
+const CONFIG = require("../config");
 
 async function main() {
-  const [deployer] = await ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+  const gas = await ethers.provider.getGasPrice();
+  const TokenSale = await ethers.getContractFactory("TokenSale");
 
-  const SolarGreenToken = await ethers.getContractFactory("SolarGreenToken");
-  const solarGreenToken = await SolarGreenToken.deploy();
+  console.log("Deploying TokenSale...");
+  const tokenSale = await upgrades.deployProxy(
+    TokenSale,
+    [process.env[CONFIG.TOKEN_ADDRESS], 10000, Math.floor(Date.now() / 1000)],
+    {
+      gasPrice: gas,
+      initializer: "initialize",
+    }
+  );
 
-  console.log("SolarGreenToken deployed to:", solarGreenToken.address);
+  await tokenSale.deployed();
+  console.log("TokenSale deployed to:", tokenSale.address);
 }
 
 main()
