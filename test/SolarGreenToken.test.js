@@ -157,7 +157,7 @@ describe("SolarGreenToken", function () {
       );
 
       // Issuing the blacklister role to the owner
-      await token.connect(owner).grantBlacklisterRole(owner.address);
+      await token.connect(owner).grantRole(token.BLACKLISTER(), owner.address);
 
       // Blocking the user who transferred the tokens
       await token.connect(owner).blockUser(owner.address);

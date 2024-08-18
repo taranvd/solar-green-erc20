@@ -1,8 +1,9 @@
-require("@nomiclabs/hardhat-waffle");
+require("@openzeppelin/hardhat-upgrades");
+require("@nomicfoundation/hardhat-toolbox");
 require("dotenv").config();
 
 module.exports = {
-  solidity: "0.8.0",
+  solidity: "0.8.15",
   networks: {
     localhost: {
       url: "http://127.0.0.1:8545",
