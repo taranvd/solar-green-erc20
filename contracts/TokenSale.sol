@@ -3,30 +3,31 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
 /**
  * @title TokenSale
  * @notice Contract for token sale
  */
-contract TokenSale is Ownable {
+contract TokenSale is Initializable, OwnableUpgradeable {
     // Token contract
-    IERC20 public immutable token;
+    IERC20 public token;
 
     // Token purchase rate (tokens per ether)
-    uint256 public immutable rate;
+    uint256 public rate;
 
     // Total number of tokens available for sale
-    uint256 public tokensForSale = 50_000_000 ether;
+    uint256 public tokensForSale;
 
     // Maximum number of tokens a user can purchase in one transaction
-    uint256 public maxTokensPerPurchase = 50_000 ether;
+    uint256 public maxTokensPerPurchase;
 
     // Total number of tokens sold during the sale
     uint256 public totalTokensSold;
 
     // Start time of the token sale
-    uint256 public immutable startTime;
+    uint256 public startTime;
 
     // End time of the token sale
     uint256 public endTime;
@@ -55,21 +56,31 @@ contract TokenSale is Ownable {
     event TokensPurchased(address indexed buyer, uint256 amount);
 
     /**
-     * @notice Constructor to initialize the TokenSale contract
+     * @notice Initializes the TokenSale contract
      * @param _token Address of the token contract
-     * @param _rate Rate of token per ether
+     * @param _rate Rate of tokens per ether
      * @param _startTime Start time of the token sale
      */
-    constructor(address _token, uint256 _rate, uint256 _startTime) {
+    function initialize(
+        address _token,
+        uint256 _rate,
+        uint256 _startTime
+    ) public initializer {
+        __Ownable_init();
+
         if (!Address.isContract(_token)) {
             revert InvalidTokenAddress("Token address must be a contract.");
         }
         if (_rate == 0) {
             revert InvalidTokenRate("Token rate cannot be zero.");
         }
+
         token = IERC20(_token);
         rate = _rate;
         startTime = _startTime;
+        endTime = _startTime + 15 days;
+        tokensForSale = 50_000_000 ether;
+        maxTokensPerPurchase = 50_000 ether;
     }
 
     /**
@@ -92,6 +103,15 @@ contract TokenSale is Ownable {
      */
     function setDuration(uint256 _duration) external onlyOwner isSaleEnded {
         endTime = startTime + _duration;
+    }
+
+    /**
+     * @notice Sets the end time of the token sale
+     * @dev Only callable by the owner of the contract
+     * @param _endTime The new end time for the token sale, specified as a timestamp (seconds since the Unix epoch)
+     */
+    function setEndTime(uint256 _endTime) external onlyOwner {
+        endTime = _endTime;
     }
 
     /**
